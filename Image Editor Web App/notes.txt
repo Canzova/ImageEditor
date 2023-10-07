@@ -1,0 +1,167 @@
+With the below code the image will be downloaded when it is roated and will not get cropped
+
+const saveImage = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+  
+    image.src = previewImage.src;
+  
+    image.addEventListener("load", () => {
+      // Calculate the dimensions of the rotated image
+      const rotatedWidth = Math.abs(image.width * Math.cos(rotate * Math.PI / 180)) + Math.abs(image.height * Math.sin(rotate * Math.PI / 180));
+      const rotatedHeight = Math.abs(image.width * Math.sin(rotate * Math.PI / 180)) + Math.abs(image.height * Math.cos(rotate * Math.PI / 180));
+  
+      // Set the canvas size to fit the rotated image
+      canvas.width = rotatedWidth;
+      canvas.height = rotatedHeight;
+  
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+      // Translate the context to the center of the canvas
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+  
+      // Rotate the context
+      ctx.rotate(rotate * Math.PI / 180);
+  
+      // Draw the image on the canvas
+      ctx.drawImage(image, -image.width / 2, -image.height / 2);
+  
+      const link = document.createElement("a");
+      link.download = fileInput.files[0].name;
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  };
+  
+  saveImgButton.addEventListener("click", saveImage);
+
+
+
+  Sure! Here are some additional features you can consider adding to your project:
+
+  1. Image cropping: Allow users to select a specific area of the image and crop it to their desired dimensions.
+  
+  2. Image resizing: Provide options for users to resize the image to specific dimensions or scale it proportionally.
+  
+  3. Image filters: Expand the range of available filters, such as sepia, hue rotation, contrast adjustment, or color balance.
+  
+  4. Text overlay: Enable users to add text overlays on top of the image, allowing them to personalize it with captions or annotations.
+  
+  5. Drawing tools: Implement drawing tools like brushes, shapes, and colors, allowing users to draw directly on the image.
+  
+  6. Undo/redo functionality: Allow users to undo or redo changes they have made to the image, providing greater flexibility and control.
+  
+  7. Multiple image upload: Enable users to upload and edit multiple images simultaneously, providing a more efficient workflow.
+  
+  8. Image effects: Add various effects like blur, sharpen, vignette, or noise reduction to enhance the overall appearance of the image.
+  
+  9. Social media sharing: Integrate sharing capabilities, allowing users to directly share their edited images on popular social media platforms.
+  
+  10. Image metadata editing: Provide the ability to edit and modify image metadata, such as title, description, tags, or geolocation.
+  
+  11. Batch processing: Allow users to apply a set of predefined edits or filters to multiple images at once, saving time and effort.
+  
+  12. Image comparison: Implement a side-by-side or before-and-after view to compare the original image with the edited version.
+  
+  13. History panel: Display a history panel that shows the sequence of applied edits, allowing users to navigate back and forth easily.
+  
+  14. Customizable templates: Offer pre-designed templates or layouts that users can apply to their images, providing quick and stylish edits.
+  
+  15. Image effects presets: Include a collection of preconfigured image effects presets that users can apply with a single click.
+  
+  Remember to consider the usability and user experience aspects while incorporating these features into your project.
+
+-----------------------------------------------------------------------------------------
+
+  const saveImage = () => {
+
+    // With the below code we are makin or creating a canvas tag in DOM
+    // Canvas tag is basically used to graw and use graphics ansimation with help of js
+
+    // With the help of the canvas we can also draw image
+
+    const canvas = document.createElement("canvas");
+
+    // .getContext('2d')---> It baiscally provides us a 2d rendering context that allow us to draw on canvas
+
+
+    // When you use the getContext("2d") method on a canvas element, you obtain a "drawing context" that allows you to draw on the canvas. This context is represented by the ctx variable, which is commonly used to refer to it.
+
+    // Think of the canvas as a blank canvas sheet and the context as a set of tools and instructions you can use to draw on that canvas.
+
+    // With the context (ctx), you can perform various actions such as drawing shapes (like rectangles, circles, or lines), displaying images, adding text, and applying transformations (like scaling, rotating, or translating).
+
+    // For example, you can use the context's methods to draw a rectangle, set the fill color, and then apply a transformation to rotate the rectangle. You can also use the context to load and display an image on the canvas, or to add text in a specific font and size.
+
+    // In summary, the context (ctx) obtained through getContext("2d") provides you with the necessary tools and functions to draw and manipulate various elements on the canvas.
+
+    const ctx = canvas.getContext("2d");
+
+    // With the below code w eare baisclly setting the width and height of the canvas element as per the image size
+
+   canvas.width = previewImage.naturalWidth; // Setting the width of the canvas to the actual width of the image
+   canvas.height = previewImage.naturalHeight;  // // Setting the height of the canvas to the actual height of the image
+
+    // Applying user selected filters to the canvas filter
+    ctx.filter = `brightness(${brightness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${graysacle}%)`;
+
+    // The default origin of any a=canvas element is at the top/left corner of a page
+
+    // With the below code we are basically trafserring the origin of the canvas from top/left corner to the center of the page
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+
+
+    // With the below code if the user has rotated the image before downloading it then we will also rotate our canvas. 
+
+    // Think of canvas a drawing sheet or a blank paper
+
+    // ctx.rotate basically takes an input in radian so we are converting degree into radian 
+    
+    if (rotate != 0) // If rotate value is not equal to 0 rotate the canvas
+    {
+        ctx.rotate(rotate * Math.PI / 180);
+    }
+
+    // Setting up the horizontal flip and vertical flip on the canvas
+    ctx.scale(flipHorizontal, flipVertical);
+
+    // with the below line we are drawing the previousImage on the canva or drawing sheet
+
+    // .drawImage take 5 argumnets.
+    // 1. Image address or shap to draw etc
+    // 2 and 3 : Where we want to place our drawing on the paper
+    // with -canvas.width / 2,  -canvas.height / 2 we are basically putting our drwan image's center on the center of the drawing sheet
+    // 4 and 5 it shows the height and width of the shape or image we want to draw
+
+    ctx.drawImage(previewImage, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+
+    const link = document.createElement("a"); // Creating <a> element
+    // link.download = "image.jpg";
+
+    // Link is the name of the constant varible and .download attribute basically download the image when user click on it.
+
+    // with link.dowmload = fileInput.files[0].name we are setting the name of the the image which is going to download as the name of the uploaded image
+
+    link.download = fileInput.files[0].name; // Set the download attribute to the original file name
+
+    // With below code we are baiscally giving the link of the canvas image drwan to the anchor tag.
+
+    // canvas,toDataURL()---> basicaly creates a link of the canvas drwaing or image
+
+    link.href = canvas.toDataURL(); // Passing a tag href value to the canvas data url
+    // toDataURL returns a data URL conatining a representaion of the image
+
+    // Due to this line (link.download = fileInput.files[0].name;) it is clear that the image will be downloaded when the use will click on the anchor tag.
+
+    // So with link.click() we are manully clickig on the anchor tag so that the image will get downloaded automaticlly when this function is called 
+
+    link.click();  // clicking a tag to download the image
+}
+
+saveImgButton.addEventListener("click", saveImage);
+
+
+
+when we are trying to remove the bg after applying the filters its not considering the filters and it removes the bg of the original image
